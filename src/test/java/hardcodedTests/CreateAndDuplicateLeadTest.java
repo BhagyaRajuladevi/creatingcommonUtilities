@@ -11,10 +11,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class CreateOrganizationTest {
+public class CreateAndDuplicateLeadTest {
 
-	public static void main(String[] args) throws InterruptedException {
-		
+	public static void main(String[] args) {
 		WebDriverManager.chromedriver().setup();
 		WebDriver driver = new ChromeDriver();
 		driver.manage().window().maximize();
@@ -36,50 +35,67 @@ public class CreateOrganizationTest {
 		else
 			System.out.println("Fail: Home page not found");
 		
-		driver.findElement(By.xpath("//a[.='Organizations']")).click();
+		driver.findElement(By.xpath("//a[.='Leads']")).click();
 		String organizationsPageHeader = driver.findElement(By.xpath("//a[@class='hdrLink']")).getText();
-		if(organizationsPageHeader.contains("Organizations"))
+		if(organizationsPageHeader.contains("Leads"))
 			System.out.println("Pass: Organizations page displayed");
 		else
 			System.out.println("Fail: Organizations page not found");
 		
-		driver.findElement(By.xpath("//img[@title='Create Organization...']")).click();
+		driver.findElement(By.xpath("//img[@title='Create Lead...']")).click();
 		String createOrganizationPageHeader = driver.findElement(By.xpath("//span[@class='lvtHeaderText']")).getText();
-		if(createOrganizationPageHeader.contains("Creating new Organization"))
-			System.out.println("Pass: Create New Organization page is displayed");
+		if(createOrganizationPageHeader.contains("Creating New Lead"))
+			System.out.println("Pass: Create New Lead page is displayed");
 		else
-			System.out.println("Fail: Create new organization page not found");
+			System.out.println("Fail: Create new Lead page not found");
 		
-		driver.findElement(By.name("accountname")).sendKeys("Infosys-01");
-		WebElement industryDropdown = driver.findElement(By.name("industry"));
-		Select industry = new Select(industryDropdown);
-		industry.selectByVisibleText("Electronics");
-		driver.findElement(By.xpath("//input[@value='T']")).click();
-		WebElement assignedToDropdown = driver.findElement(By.xpath("//select[@name='assigned_group_id']"));
-		//Thread.sleep(2000);
-		Select assignedTo = new Select(assignedToDropdown);
-		assignedTo.selectByVisibleText("Support Group");
-		
+		WebElement firstNameSalutationDropdown = driver.findElement(By.name("salutationtype"));
+		Select salutation = new Select(firstNameSalutationDropdown);
+		salutation.selectByValue("Mrs.");
+
+		driver.findElement(By.name("lastname")).sendKeys("Valli_02");
+		driver.findElement(By.name("company")).sendKeys("Fedex");
+
 		driver.findElement(By.xpath("//input[contains(@value,'Save')]")).click();
-		
-		String newOrganizationInfo = driver.findElement(By.xpath("//span[@class='dvHeaderText']")).getText();
-		if(newOrganizationInfo.contains("Infosys"))
-			System.out.println("Pass: New Orgaization Info page displayed");
+
+		String newLeadInfo = driver.findElement(By.xpath("//span[@class='dvHeaderText']")).getText();
+		if (newLeadInfo.contains("Valli_02"))
+			System.out.println("Pass: New Lead Info page displayed");
 		else
-			System.out.println("Fail: New Organization Info not found");
+			System.out.println("Fail: New Lead Info not found");
+		driver.findElement(By.name("Duplicate")).click();
+		String duplicatingPageHeader = driver.findElement(By.xpath("//span[@class='lvtHeaderText']")).getText();
+		if(duplicatingPageHeader.contains("Duplicating"))
+			System.out.println("Pass: Duplicating Lead page is displayed");
+		else
+			System.out.println("Fail: Duplicating Lead page not found");
+		WebElement lastNameTextField = driver.findElement(By.name("lastname"));
+		lastNameTextField.clear();
+		lastNameTextField.sendKeys("ABC_02");
+		driver.findElement(By.xpath("//input[contains(@value,'Save')]")).click();
+
+		String duplicatedLeadInfo = driver.findElement(By.xpath("//span[@class='dvHeaderText']")).getText();
+		if (duplicatedLeadInfo.contains("ABC_02"))
+			System.out.println("Pass: New Lead Info page displayed");
+		else
+			System.out.println("Fail: New Lead Info not found");
 		
 		driver.findElement(By.xpath("//a[@class='hdrLink']")).click();
 		WebElement newOrganization = driver.findElement(By.xpath("//table[@class='lvt small']/tbody/tr[last()]/td[3]"));
-		if(newOrganization.getText().contains("Infosys"))
+		if (newOrganization.getText().contains("ABC_02"))
 			System.out.println("Test case passed");
 		else
 			System.out.println("Test case failed");
-		
+
 		WebElement administratorImage = driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']"));
 		Actions a = new Actions(driver);
 		a.moveToElement(administratorImage).perform();
 		driver.findElement(By.xpath("//a[.='Sign Out']")).click();
-		
+
 		driver.quit();
-		}
+		
+		
+
+	}
+
 }
