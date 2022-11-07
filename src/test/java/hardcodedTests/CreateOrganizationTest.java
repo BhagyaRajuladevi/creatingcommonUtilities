@@ -1,6 +1,7 @@
 package hardcodedTests;
 
 import java.time.Duration;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +15,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class CreateOrganizationTest {
 
 	public static void main(String[] args) throws InterruptedException {
+		Random random = new Random();
+		int randomNum = random.nextInt(100);
 		
 		WebDriverManager.chromedriver().setup();
 		WebDriver driver = new ChromeDriver();
@@ -50,27 +53,28 @@ public class CreateOrganizationTest {
 		else
 			System.out.println("Fail: Create new organization page not found");
 		
-		driver.findElement(By.name("accountname")).sendKeys("Infosys-01");
+		String accountName = "Infosys"+randomNum;
+		driver.findElement(By.name("accountname")).sendKeys(accountName);
 		WebElement industryDropdown = driver.findElement(By.name("industry"));
 		Select industry = new Select(industryDropdown);
 		industry.selectByVisibleText("Electronics");
 		driver.findElement(By.xpath("//input[@value='T']")).click();
 		WebElement assignedToDropdown = driver.findElement(By.xpath("//select[@name='assigned_group_id']"));
-		//Thread.sleep(2000);
+		
 		Select assignedTo = new Select(assignedToDropdown);
 		assignedTo.selectByVisibleText("Support Group");
 		
 		driver.findElement(By.xpath("//input[contains(@value,'Save')]")).click();
 		
 		String newOrganizationInfo = driver.findElement(By.xpath("//span[@class='dvHeaderText']")).getText();
-		if(newOrganizationInfo.contains("Infosys"))
+		if(newOrganizationInfo.contains(accountName))
 			System.out.println("Pass: New Orgaization Info page displayed");
 		else
 			System.out.println("Fail: New Organization Info not found");
 		
 		driver.findElement(By.xpath("//a[@class='hdrLink']")).click();
 		WebElement newOrganization = driver.findElement(By.xpath("//table[@class='lvt small']/tbody/tr[last()]/td[3]"));
-		if(newOrganization.getText().contains("Infosys"))
+		if(newOrganization.getText().contains(accountName))
 			System.out.println("Test case passed");
 		else
 			System.out.println("Test case failed");
