@@ -17,14 +17,15 @@ public class PropertyFileUtility {
 	
 	/**
 	 * This method is used to initialize properties file
+	 * @param propertyPath 
 	 * @throws IOException
 	 */
 	
-	public void propertyFileInitialization()  {
+	public void propertyFileInitialization(String propertyPath)  {
 		
 		FileInputStream fis=null;
 		try {
-			fis = new FileInputStream("./src/test/resources/commonData.properties");
+			fis = new FileInputStream(propertyPath);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
