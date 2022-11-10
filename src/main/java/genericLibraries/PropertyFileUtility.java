@@ -45,7 +45,7 @@ public class PropertyFileUtility {
 	 * @throws IOException
 	 */
 	
-	public String getDataFromPropertyFile(String key) throws IOException {
+	public String getDataFromPropertyFile(String key)  {
 		
 		String data = property.getProperty(key);
 		return data;

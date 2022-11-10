@@ -1,6 +1,7 @@
 package genericLibraries;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,16 +16,30 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class ExcelFileUtility {
 	private Workbook workbook;
 	
-	public void excelFileInitialization(String excelPath) throws EncryptedDocumentException, IOException {
-		FileInputStream fis = new FileInputStream(excelPath);
-		workbook = WorkbookFactory.create(fis);
+	public void excelFileInitialization(String excelPath)  {
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(excelPath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			workbook = WorkbookFactory.create(fis);
+		} catch (EncryptedDocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public Map<String, String> fetchDataFromExcel(String expectedtestNAme) throws EncryptedDocumentException, IOException {
+	public Map<String, String> fetchDataFromExcel(String expectedtestNAme, String sheetName)  {
 		
-		Sheet sheet = workbook.getSheet("TestData");
-		Map<String, String> map = new HashMap<String, String>();
-
+		Sheet sheet = workbook.getSheet(sheetName);
+		Map<String, String> map = new HashMap<>();
+		
 		for (int i = 0; i <= sheet.getLastRowNum(); i++) {
 
 			if (sheet.getRow(i).getCell(1).getStringCellValue().equals(expectedtestNAme)) {
@@ -41,8 +56,8 @@ public class ExcelFileUtility {
 
 	}
 	
-	public void writeDataIntoExcel(String expectedTestName, String status, String excelPath) throws IOException {
-		Sheet sheet = workbook.getSheet("TestData");
+	public void writeDataIntoExcel(String expectedTestName, String status, String excelPath, String sheetName)  {
+		Sheet sheet = workbook.getSheet(sheetName);
 		
 		for(int i=0; i<=sheet.getLastRowNum();i++) {
 			if(sheet.getRow(i).getCell(1).getStringCellValue().equals(expectedTestName)) {
@@ -52,12 +67,28 @@ public class ExcelFileUtility {
 			}
 		}
 		
-		FileOutputStream fos = new FileOutputStream(excelPath);
-		workbook.write(fos);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(excelPath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			workbook.write(fos);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public void closeWorkbook() throws IOException {
-		workbook.close();
+	public void closeWorkbook() {
+		try {
+			workbook.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -34,6 +34,11 @@ public class WebDriverUtility {
 		s.selectByVisibleText(text);
 	}
 	
+	public void dropdown(String value, WebElement element) {
+		Select s = new Select(element);
+		s.selectByValue(value);
+	}
+	
 	public void switchToWindow(String windowID) {
 		driver.switchTo().window(windowID);
 	}
